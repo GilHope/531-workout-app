@@ -1,14 +1,12 @@
-import config
+# app/calculations.py
+from . import config
 
 def round_to_nearest_5(weight):
     """Round a weight value to the nearest 5."""
     return int(round(weight / 5.0)) * 5
 
 def calculate_training_max(one_rm):
-    """
-    Calculate the training max given a one-rep max.
-    Uses the multiplier from config.py.
-    """
+    """Calculate the training max given a one-rep max using the multiplier in config."""
     return one_rm * config.TRAINING_MAX_MULTIPLIER
 
 def calculate_main_sets(training_max, scheme):
@@ -39,12 +37,25 @@ def calculate_accessory(accessory_choice, training_max, main_sets):
     else:
         return ""
 
-def generate_workout_plan(num_weeks, one_rms, accessory_choice):
+def calculate_warmup_sets(training_max):
+    """
+    Calculate warm-up sets for a given training max.
+    For example, we use a scheme: 40% x 5, 50% x 5, and 60% x 3.
+    """
+    warmup_scheme = {"reps": [5, 5, 3], "percentages": [0.40, 0.50, 0.60]}
+    sets = []
+    for rep, pct in zip(warmup_scheme["reps"], warmup_scheme["percentages"]):
+        weight = round_to_nearest_5(training_max * pct)
+        sets.append(f"{rep} x {weight}")
+    return sets
+
+def generate_workout_plan(num_weeks, one_rms, accessory_choice, include_warmup=False):
     """
     Generate the workout plan.
       - num_weeks: number of weeks requested.
-      - one_rms: dict mapping lift names to one rep maxes.
-      - accessory_choice: 0,1,2, or 3.
+      - one_rms: dict mapping lift names to one-rep maxes.
+      - accessory_choice: 0, 1, 2, or 3.
+      - include_warmup: boolean; if True, warm-up sets will be calculated.
     
     Returns a dict where each week (key) maps to a dict of lifts and their workouts.
     """
@@ -75,7 +86,6 @@ def generate_workout_plan(num_weeks, one_rms, accessory_choice):
     }
 
     workout_plan = {}
-
     lifts = config.LIFT_ORDER
 
     for week in range(1, num_weeks + 1):
@@ -88,14 +98,18 @@ def generate_workout_plan(num_weeks, one_rms, accessory_choice):
             accessory = ""
             if accessory_choice in [1, 2, 3]:
                 accessory = calculate_accessory(accessory_choice, training_maxes[lift], main_sets)
+            warmup = []
+            if include_warmup:
+                warmup = calculate_warmup_sets(training_maxes[lift])
             week_plan[lift] = {
                 "scheme": scheme_name,
                 "main_sets": main_sets,
-                "accessory": accessory
+                "accessory": accessory,
+                "warmup_sets": warmup
             }
         workout_plan[week] = week_plan
 
-        # End of 4-week cycle: update training maxes if there are more weeks.
+        # Update training maxes after each 4-week cycle (if more weeks remain).
         if week % 4 == 0 and week < num_weeks:
             for lift in training_maxes:
                 if lift in ["Bench", "OHP"]:
