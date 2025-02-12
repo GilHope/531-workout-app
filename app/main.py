@@ -1,4 +1,3 @@
-# main.py
 import config
 import calculations
 
