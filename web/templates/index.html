@@ -1,4 +1,3 @@
-<!-- web/templates/index.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,11 +9,11 @@
         <h1>Wendler 5/3/1 Workout Plan Generator</h1>
         <form method="post" action="/">
             <label>Number of weeks:</label>
-            <input type="number" name="num_weeks" value="4" min="1" required /><br><br>
+            <input type="number" name="num_weeks" value="4" min="4" max="20" required /><br><br>
 
             {% for lift in lifts %}
                 <label>{{ lift }} 1RM:</label>
-                <input type="text" name="{{ lift }}" required /><br>
+                <input type="number" name="{{ lift }}" required min="100" max="1000" step="any" /><br>
             {% endfor %}
             <br>
             <label>Accessory Protocol:</label><br>

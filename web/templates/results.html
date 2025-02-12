@@ -29,6 +29,9 @@
             <p>No workout plan generated.</p>
         {% endif %}
         <a href="{{ url_for('index') }}">Generate another plan</a>
+        <div class="no-print">
+            <button onclick="window.print()">Print this page</button>
+        </div>
     </div>
 </body>
 </html>
