@@ -82,8 +82,8 @@ def main():
             # Add accessory work if selected.
             if accessory_choice == 1:
                 # Boring But Big: 5 sets of 10 at 50% of the training max.
-                acc_weight = round_to_nearest_5(training_maxes[lift] * 0.50)
-                print(f"    Accessory (Boring But Big): 5 sets of 10 x {acc_weight}")
+                bbb_weight = round_to_nearest_5(training_maxes[lift] * 0.50)
+                print(f"    Accessory (Boring But Big): 5 sets of 10 x {bbb_weight}")
             elif accessory_choice == 2:
                 # First Set Last: Repeat the first main working set exactly.
                 print(f"    Accessory (First Set Last): {main_sets[0]}")
