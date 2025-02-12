@@ -1,0 +1,34 @@
+<!-- web/templates/results.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Workout Plan Results</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Workout Plan Results</h1>
+        {% if workout_plan %}
+            {% for week, week_plan in workout_plan.items() %}
+                <div class="result">
+                    <h2>Week {{ week }}</h2>
+                    {% for lift, details in week_plan.items() %}
+                        <h3>{{ lift }} (Scheme: {{ details.scheme }})</h3>
+                        {% if details.warmup_sets %}
+                            <p>Warm-up sets: {{ details.warmup_sets | join(", ") }}</p>
+                        {% endif %}
+                        <p>Main sets: {{ details.main_sets | join(", ") }}</p>
+                        {% if details.accessory %}
+                            <p>{{ details.accessory }}</p>
+                        {% endif %}
+                    {% endfor %}
+                    <hr>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No workout plan generated.</p>
+        {% endif %}
+        <a href="{{ url_for('index') }}">Generate another plan</a>
+    </div>
+</body>
+</html>

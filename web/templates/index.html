@@ -1,0 +1,33 @@
+<!-- web/templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wendler 5/3/1 Workout Plan Generator</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Wendler 5/3/1 Workout Plan Generator</h1>
+        <form method="post" action="/">
+            <label>Number of weeks:</label>
+            <input type="number" name="num_weeks" value="4" min="1" required /><br><br>
+
+            {% for lift in lifts %}
+                <label>{{ lift }} 1RM:</label>
+                <input type="text" name="{{ lift }}" required /><br>
+            {% endfor %}
+            <br>
+            <label>Accessory Protocol:</label><br>
+            <input type="radio" name="accessory_choice" value="0" checked> None<br>
+            <input type="radio" name="accessory_choice" value="1"> Boring But Big<br>
+            <input type="radio" name="accessory_choice" value="2"> First Set Last<br>
+            <input type="radio" name="accessory_choice" value="3"> Pyramid<br><br>
+
+            <label>Include Warm-up Sets:</label>
+            <input type="checkbox" name="include_warmup" value="1"><br><br>
+
+            <button type="submit">Generate Plan</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,5 +1,37 @@
+# Byte-compiled / optimized files and caches
 __pycache__/
-.cache
+*.py[cod]
+*$py.class
 
+# Virtual environment directories
+venv/
+.env/
+.venv/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Editor / IDE specific
 .vscode/
+.idea/
+
+# OS-specific files
 .DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# If you use coverage.py
+htmlcov/
+
+# If using mypy
+.mypy_cache/
+
+# If using pytest
+.cache/
+
+# If using Jupyter Notebooks
+.ipynb_checkpoints/
