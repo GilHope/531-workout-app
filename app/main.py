@@ -1,3 +1,4 @@
+# main.py
 import config
 import calculations
 
@@ -5,14 +6,25 @@ def main():
     # Use the lift order from config.py
     lifts = config.LIFT_ORDER
 
-    # Get 1RM for each lift and calculate the training max.
-    print("Enter your 1RM for each lift (numbers only):")
+    # Ask the user for the number of weeks to calculate for.
+    try:
+        num_weeks = int(input("Enter the number of weeks to calculate for: "))
+    except ValueError:
+        print("Invalid input. Defaulting to 4 weeks.")
+        num_weeks = 4
+
+    # Get the 1RM for each lift and calculate the initial training max.
+    print("\nEnter your 1RM for each lift (numbers only):")
     training_maxes = {}
     for lift in lifts:
-        one_rm = float(input(f"  {lift} 1RM: "))
+        try:
+            one_rm = float(input(f"  {lift} 1RM: "))
+        except ValueError:
+            print("Invalid number entered. Defaulting to 0.")
+            one_rm = 0.0
         tm = calculations.calculate_training_max(one_rm)
         training_maxes[lift] = tm
-        print(f"  {lift} Training Max (90% of 1RM): {tm:.2f}")
+        print(f"  {lift} Training Max ({config.TRAINING_MAX_MULTIPLIER*100:.0f}% of 1RM): {tm:.2f}")
 
     # Choose an accessory protocol.
     print("\nSelect an accessory protocol:")
@@ -47,15 +59,12 @@ def main():
         }
     }
 
-    # Number of weeks in the cycle.
-    num_weeks = 4
     print("\nYour 5/3/1 Cycle:\n")
-    
-    # For each week...
+    # Loop for each week as specified by the user.
     for week in range(1, num_weeks + 1):
         print(f"Week {week}:")
         for i, lift in enumerate(lifts):
-            # Rotate the scheme assignment across the 4-week cycle.
+            # Rotate the scheme assignment across the weeks.
             scheme_index = (i - (week - 1)) % 4
             scheme_name = schemes[scheme_index]
             scheme = program[scheme_name]
@@ -64,13 +73,21 @@ def main():
             main_sets = calculations.calculate_main_sets(training_maxes[lift], scheme)
             print(f"  {lift}: " + ", ".join(main_sets))
             
-            # Calculate and print accessory work if selected.
+            # Add accessory work if selected.
             if accessory_choice in [1, 2, 3]:
-                accessory_text = calculations.calculate_accessory(
-                    accessory_choice, training_maxes[lift], main_sets
-                )
+                accessory_text = calculations.calculate_accessory(accessory_choice, training_maxes[lift], main_sets)
                 print("    " + accessory_text)
         print()  # Blank line after each week
+
+        # If we've completed a 4-week cycle and there are more weeks to go,
+        # update the training maxes for the next cycle.
+        if week % 4 == 0 and week < num_weeks:
+            for lift in training_maxes:
+                if lift in ["Bench", "OHP"]:
+                    training_maxes[lift] += 5
+                elif lift in ["Squat", "Deadlift"]:
+                    training_maxes[lift] += 10
+            print("Cycle complete. Training maxes have been increased for the next cycle.\n")
 
 if __name__ == "__main__":
     main()

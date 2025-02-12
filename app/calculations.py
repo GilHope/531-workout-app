@@ -14,7 +14,7 @@ def calculate_training_max(one_rm):
 def calculate_main_sets(training_max, scheme):
     """
     Calculate main working sets for a given training max and scheme.
-    scheme: a dict with keys 'reps' and 'percentages'
+    'scheme' should be a dict with keys 'reps' and 'percentages'.
     """
     sets = []
     for rep, pct in zip(scheme["reps"], scheme["percentages"]):
@@ -24,10 +24,10 @@ def calculate_main_sets(training_max, scheme):
 
 def calculate_accessory(accessory_choice, training_max, main_sets):
     """
-    Calculate accessory work output based on the accessory_choice:
+    Generate accessory work output based on the accessory_choice:
       1 -> Boring But Big (5 sets of 10 at 50% of training max)
       2 -> First Set Last (repeat the first main set)
-      3 -> Pyramid (first pyramid set = second main set; second pyramid set = first main set)
+      3 -> Pyramid (2 sets: 1st = second main set, 2nd = first main set)
     """
     if accessory_choice == 1:
         weight = round_to_nearest_5(training_max * 0.50)
